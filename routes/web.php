@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\UserInfoController;
+
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,5 +21,5 @@ Route::get('/', function () {
 
 //Route::view('/', 'welcome');
 
-Route::get('/user', [UserInfoController::class, "index"])->name('user.index');
-Route::resource('/product', ProductController::class)->except('show');
+
+Route::resource('students', StudentController::class);
