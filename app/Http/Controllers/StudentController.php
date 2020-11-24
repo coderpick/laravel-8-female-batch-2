@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class StudentController extends Controller {
     /**
@@ -15,7 +17,7 @@ class StudentController extends Controller {
         // $students = DB::table( 'students' )->get();
         $data['students'] = Student::get();
         $data['pageTitle'] = 'Student List';
-        return view( 'student.index',$data );
+        return view( 'student.index', $data );
     }
 
     /**
@@ -25,7 +27,7 @@ class StudentController extends Controller {
      */
     public function create() {
         $data['pageTitle'] = 'Student Create';
-        return view( 'student.create',$data );
+        return view( 'student.create', $data );
     }
 
     /**
@@ -35,7 +37,22 @@ class StudentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store( Request $request ) {
-        return $request;
+
+        $this->validate( $request, [
+            'name'    => 'required',
+            'email'   => 'required|email',
+            'mobile'  => 'required|min:11',
+            'address' => 'required',
+        ] );
+
+        $student = new Student();
+        $student->name  = $request->name;
+        $student->email  = $request->email;
+        $student->mobile  = $request->mobile;
+        $student->address  = $request->address;
+        $student->save();
+        Session::flash('success', 'Student information save successfully');
+        return redirect()->route('students.index');
     }
 
     /**
@@ -55,7 +72,10 @@ class StudentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit( $id ) {
-        //
+      //return   DB::table( 'students' )->where('id',$id)->get();
+    $data['student'] = Student::findOrFail($id);
+    $data['pageTitle'] = 'Student Edit';
+    return view('student.edit',$data);
     }
 
     /**
@@ -66,7 +86,21 @@ class StudentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update( Request $request, $id ) {
-        //
+        $this->validate( $request, [
+    'name'    => 'required',
+    'email'   => 'required|email',
+    'mobile'  => 'required|min:11',
+    'address' => 'required',
+] );
+
+$student = Student::findOrFail($id);
+$student->name = $request->name;
+$student->email = $request->email;
+$student->mobile = $request->mobile;
+$student->address = $request->address;
+$student->save();
+Session::flash( 'success', 'Student information update successfully' );
+return redirect()->route( 'students.index' );
     }
 
     /**
@@ -76,6 +110,9 @@ class StudentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy( $id ) {
-        //
+        $student = Student::findOrFail($id);
+        $student->delete();
+        Session::flash( 'success', 'Student information delete successfully' );
+        return redirect()->route( 'students.index' );
     }
 }

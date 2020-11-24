@@ -27,6 +27,14 @@
                 <a href="{{ route('students.create') }}" class="btn btn-info">Add New</a>
             </div>
         </div>
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Success!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+        @endif
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -39,21 +47,28 @@
                 </tr>
             </thead>
             <tbody>
-                @if ($students)
-                    @foreach ($students as $key => $student)
-                        <tr>
-                            <td>{{ $key + 1 }}</td>
-                            <td>{{ $student->name }}</td>
-                            <td>{{ $student->email }}</td>
-                            <td>{{ $student->mobile }}</td>
-                            <td>{{ $student->address }}</td>
-                            <td>
-                                <a href="" class="btn btn-success">Edit</a>
-                                <a href="" class="btn btn-danger">Delete</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                @endif
+
+                @forelse ($students as $key => $student)
+                    <tr>
+                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $student->name }}</td>
+                        <td>{{ $student->email }}</td>
+                        <td>{{ $student->mobile }}</td>
+                        <td>{{ $student->address }}</td>
+                        <td>
+                            <a href="{{ route('students.edit',$student->id) }}" class="btn btn-success">Edit</a>
+
+                            <a href="#" onclick="document.getElementById('delete-form-{{ $student->id }}').submit()" class="btn btn-danger">Delete</a>
+                            <form id="delete-form-{{ $student->id }}" action="{{ route('students.destroy',$student->id) }}" method="POST" style="display: none;">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <p>No student record foun(:< </p>
+                @endforelse ()
+
             </tbody>
         </table>
 

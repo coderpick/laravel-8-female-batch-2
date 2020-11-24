@@ -31,28 +31,31 @@
                 </div>
             </div>
             <div class="card-body">
-                <form action="{{ route('students.store') }}" method="POST">
+                <form action="{{ route('students.update', $student->id) }}" method="POST">
                     @csrf
+                    @if ($student)
+                        @method('PUT')
+                    @endif
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}"
-                            placeholder="Enter name">
+                        <input type="text" name="name" class="form-control" id="name"
+                            value="{{ $student->name ?? old('name') }}" placeholder="Enter name">
                         @error('name')
                             <span class="text-danger d-block">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group">
                         <label for="email">Email address</label>
-                        <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}"
-                            placeholder="Enter email">
+                        <input type="email" name="email" class="form-control" id="email"
+                            value="{{ $student->email ?? old('email') }}" placeholder="Enter email">
                         @error('email')
                             <span class="text-danger d-block">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group">
                         <label for="mobile">Mobile</label>
-                        <input type="text" name="mobile" class="form-control" id="mobile" value="{{ old('mobile') }}"
-                            placeholder="Enter mobile number">
+                        <input type="text" name="mobile" class="form-control" id="mobile"
+                            value="{{ $student->mobile ?? old('mobile') }}" placeholder="Enter mobile number">
                         @error('mobile')
                             <span class="text-danger d-block">{{ $message }}</span>
                         @enderror
@@ -60,13 +63,13 @@
                     <div class="form-group">
                         <label for="address">Address</label>
                         <textarea name="address" rows="4" class="form-control" id="address"
-                            placeholder="Enter address">{{ old('address') }}</textarea>
+                            placeholder="Enter address">{{ $student->address ?? old('address') }}</textarea>
                         @error('address')
                             <span class="text-danger d-block">{{ $message }}</span>
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
 
                 </form>
             </div>
